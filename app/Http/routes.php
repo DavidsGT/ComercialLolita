@@ -54,6 +54,7 @@ route::get('reportes/clientes/reportecompra','PdfController@getPDFC');
 route::resource('control/inicio','UsuarioController@inicio');
 Route::auth();
 route::get('ventas/venta/codigo/{cod}', 'VentasController@codigovendedor');
+route::get('compras/ingreso/codigo/{cod}', 'VentasController@codigovendedor');
 route::get('ventas/empleado/codigo/{cod}', 'EmpleadoController@codigoexistente');
 Route::post('/reportes/clientes/reportecliente', ['as' => 'date','uses' => 'PdfController@getPDFV', 
                             function () {

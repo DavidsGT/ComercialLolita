@@ -2,8 +2,6 @@
 @section ('contenido')
 @push ('scripts')
 	<script src="{{ asset('js/ventas/venta.js') }}"></script>
-@endpush
-@push ('scripts')
 	<link href="{{ asset('css/ventas/modal.css') }}" rel="stylesheet">
 @endpush
 		{!! Form::open(array('url'=>'ventas/venta','method'=>'POST','autocomplete'=>'off','id'=>'venta'))!!}
@@ -52,7 +50,7 @@
 		<div class="form-group">
 			<input type="hidden" id="idvendedor" name="idvendedor" value="" class="form-control" placeholder="Codigo Vendedor...." required>	
 			<label for="idvendedor">Codigo Vendedor</label><label id="nombreVendedor"></label>
-			<input type="password" id="codvendedor" value="" required="" class="form-control" placeholder="Codigo Vendedor...." required>	
+			<input type="password" id="codvendedor" value="" class="form-control" placeholder="Codigo Vendedor...." required>	
 		</div>
 	</div>
 	<div class="col-lg-4 col-mg-4 col-sg-4 col-xs-12">

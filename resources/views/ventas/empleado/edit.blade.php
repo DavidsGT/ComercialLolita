@@ -1,10 +1,5 @@
-@extends ('layouts.admin')
+@extends ('layouts.admin',['title'=>"Editar Empleado: $persona->apellido $persona->nombre"])
 @section ('contenido')
-<div class="row">
-	<div class="col-lg-6 col-mg-6 col-sg-6 col-xs-12">
-		<h3>Editar Empleado: {{$persona->nombre}} </h3>
-	</div>
-</div>
 		{!! Form::model($persona,['method'=>'PATCH','route'=>['ventas.empleado.update',$persona->id]])!!}
 			{{Form::token()}}
 		<div class="row">

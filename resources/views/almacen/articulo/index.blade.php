@@ -16,6 +16,8 @@
 				<th>Nombre</th>
 				<th>Categoria</th>
 				<th>Precio Unitario</th>
+				<th>Precio Empresarial</th>
+				<th>Precio Distribución</th>
 				<th>Stock</th>
 				<th>Iva</th>
 				<th>Opciones</th>
@@ -26,6 +28,8 @@
 				<td>{{$art->nombre}}</td>
 				<td>{{comercial\PgDetalle::find($art->fk_pg_categoria)->descripcion}}</td>
 				<td>{{$art->precio_unitario}}</td>
+				<td>{{$art->precio_empresarial}}</td>
+				<td>{{$art->precio_distribucion}}</td>
 				<td>{{$art->stock}}</td>
 				<td>{{($art->iva?"Si":"No")}}</td>
 				<td>

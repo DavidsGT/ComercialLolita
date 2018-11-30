@@ -8,7 +8,9 @@ use comercial\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use comercial\http\Requests\VentasFormRequest;
 use Illuminate\Support\Facades\Redirect;
+use comercial\Cliente;
 use comercial\Ventas;
+use comercial\Articulo;
 use comercial\VentasDet;
 use comercial\DetalleVentas;
 use DB;
@@ -57,14 +59,11 @@ class VentasController extends Controller
 
     public function create()
     {
-    	$personas=DB::table('persona as per')
-        ->select(DB::raw('CONCAT(per.numero_documento," ",per.nombre) as nombre'),'per.idpersona','per.tipo_cliente','per.porc_desc')
-        ->where('tipo_persona','=','Cliente')
+    	$personas=Cliente::select(DB::raw('CONCAT(numero_documento," ",nombre) as nombre'),'id')
+        ->where('estado',true)
         ->get();
 
-    	$articulos = DB::table('articulo as art')
-    	->join('detalle_ingreso as di','art.idarticulo','=','di.idarticulo')
-        ->select(DB::raw('CONCAT(art.codigo," ",art.nombre) as articulo'), 'art.idarticulo','art.stock','di.precio_venta_normal as precio_normal','di.precio_venta_empresarial as precio_empresarial','di.precio_venta_distribucion as precio_distribucion','art.iva','art.stockmin')
+    	$articulos = Articulo::select(DB::raw('CONCAT(codigo," ",nombre) as articulo'), 'idarticulo','stock','precio_unitario as precio_normal','di.precio_venta_empresarial as precio_empresarial','di.precio_venta_distribucion as precio_distribucion','art.iva','art.stockmin')
         ->where('art.estado','=','Activo')
         ->where('art.stock','>','0')
         ->where('di.precio_venta_normal','>','0')

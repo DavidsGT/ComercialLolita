@@ -14,20 +14,25 @@ class Ingreso extends Model
 
     protected $fillable = [
     'idproveedor',
-    'tipo_comprobante',
+    'idempleado',
+    'fk_pg_tipo_comprobante',
+    'fk_pg_forma_pago',
     'serie_comprobante',
 	'numero_comprobante',
 	'fecha_hora',
-	'total_iva',
     'subtotal',
-	'estado',
-    'vendedor',
-    'formapago',
+    'impuesto',
     'retfuente',
     'retiva',
+    'estado',
     ];
-
-    protected $guarded =[
-     
-    ];
+    public function detalles(){
+        return $this->hasMany('comercial\DetalleIngreso','idingreso');
+    }
+    public function empleadoEncargado(){
+        return $this->belongsTo('comercial\Empleado');
+    }
+    public function proveedorEncargado(){
+        return $this->belongsTo('comercial\Proveedor');
+    }
 }

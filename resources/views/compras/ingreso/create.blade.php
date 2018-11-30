@@ -1,19 +1,8 @@
 @extends ('layouts.admin')
 @section ('contenido')
-<div class="row">
-	<div class="col-lg-6 col-mg-6 col-sg-6 col-xs-12">
-		<h4>Nuevo Ingreso</h4>
-		@if (count($errors)>0)
-		<div class="alert alert-danger">
-			<ul>
-			@foreach($errors->all() as $error)
-				<li>{{$error}}</li>
-			@endforeach
-			</ul>
-		</div>
-		@endif
-	</div>
-</div>
+@push ('scripts')
+	<script src="{{ asset('js/compras/ingreso.js') }}"></script>
+@endpush
 		{!! Form::open(array('url'=>'compras/ingreso','method'=>'POST','autocomplete'=>'off'))!!}
 			{{Form::token()}}
 <div class="row">
@@ -22,7 +11,7 @@
 			<label for="proveedor">Proveedor</label>
 			<select name="idproveedor" id="idproveedor" class="form-control selectpicker" data-live-search="true">
 			@foreach($personas as $persona)
-					<option value="{{$persona->idpersona}}_{{$persona->representante}}">
+				<option value="{{$persona->id}}">
 					{{$persona->nombre}}
 				</option>
 			@endforeach
@@ -31,32 +20,31 @@
 	</div>
 	
 	<div class="col-lg-4 col-mg-4 col-sg-4 col-xs-12">
-			<div class="form-group">
-			<label for="vendedor">Vendedor</label>
-			<input type="text" readonly name="vendedor" id="vendedor" class="form-control" placeholder="representante...." >
-			</div>
+		<div class="form-group">
+			<input type="hidden" id="idvendedor" name="idvendedor"  required>
+			<label for="vendedor">Empleado Responsable</label><label id="nombreVendedor"></label>
+			<input type="password" name="vendedor" id="vendedor" class="form-control" required placeholder="Codigo Empleado...." >
+		</div>
 	</div>
-
-	<div class="col-lg-3 col-mg-3 col-sg-3 col-xs-12">
+	<div class="col-lg-4 col-mg-4 col-sg-4 col-xs-12">
 		<div class="form-group">
 			<label>Forma de Pago</label>
-			<select name="formapago" class="form-control selectpicker" >
-				<option value="Efectivo">Efectivo</option>
-				<option value="Cheque">Cheque</option>
-				<option value="Credito 30">Credito 30</option>
-				<option value="Credito 60">Credito 60</option>
-				<option value="Credito 90">Credito 90</option>
-				<option value="Credito 120">Credito 120</option>
+			<select name="formapago" class="form-control">
+				<option value="" selected>Seleccione Forma de Pago</option>
+				@foreach($formaPago as $for)
+				<option value="{{$for->id}}">{{$for->descripcion}}</option>
+				@endforeach
 			</select>
 		</div>
 	</div>
 	<div class="col-lg-4 col-mg-4 col-sg-4 col-xs-12">
 		<div class="form-group">
-			<label>Tipo Comprobante</label>
+			<label>Tipo de Comprobante</label>
 			<select name="tipo_comprobante" class="form-control">
-				<option value="Factura">Factura</option>
-				<option value="NotaVenta">Nota Venta</option>
-				<option value="Donacion">Donacion</option>
+				<option value="" selected>Seleccione Tipo de Comprobante</option>
+				@foreach($tipoComprobante as $tcomp)
+				<option value="{{$tcomp->id}}">{{$tcomp->descripcion}}</option>
+				@endforeach
 			</select>
 		</div>
 	</div>
@@ -193,7 +181,7 @@
 						</select>
 
 					</th>
-					<th><input name="retiva" id="retiva" style="text-align: right; width: 80px; "></th>></th>
+					<th><input name="retiva" id="retiva" style="text-align: right; width: 80px; "></th></th>
 					<th></th>
 				
 					<th style="text-align: right;" >Subtotal</th>
@@ -248,7 +236,6 @@ $("#retfuente").on({
         $(event.target).select();
     },
     "keyup": function (event) {
-    	//alert("hhhh");
         $(event.target).val(function (index, value ) {
             return value.replace(/\D/g, "")
                         .replace(/([0-9])([0-9]{2})$/, '$1.$2')
@@ -259,17 +246,15 @@ $("#retfuente").on({
 
  $(document).ready(function () {
           $("#por_venta").keyup(function () {
-              var value = $(this).val();
+              var porc = $(this).val();
               var valor2 = $("#pprecio_compra").val();
-              var nuevoprecio = (value/100) * valor2;
+              var nuevoprecio = (porc/100) * valor2;
+              var newPrecioEmpresarial
               nuevoprecio = parseFloat(valor2) + parseFloat(nuevoprecio);
-              var pre_venta = parseFloat(Math.round(nuevoprecio * 100) / 100).toFixed(2);	
+              var pre_venta = parseFloat(Math.round(nuevoprecio * 100) / 100).toFixed(2);
               $("#pprecio_venta_normal").val(pre_venta);
-              
           });
       });
-
-  
 
 	var mostrarValor = function(x){
 		document.getElementById('retfuente').value=x;

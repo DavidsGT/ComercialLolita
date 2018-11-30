@@ -20,6 +20,9 @@ class DetalleIngreso extends Model
 	'precio_venta_normal',
     'precio_venta_empresarial',
     'precio_venta_distribucion',
-    'tipoiva'
+    'iva'
 	];
+    public function ingreso(){
+        return $this->belongsTo('comercial\Ingreso');
+    }
 }

@@ -10,7 +10,9 @@ use comercial\http\Requests\IngresoFormRequest;
 use Illuminate\Support\Facades\Redirect;
 use comercial\Ingreso;
 use comercial\Kardex;
-use comercial\Persona;
+use comercial\Proveedor;
+use comercial\articulo;
+use comercial\PgCabecera;
 use comercial\DetalleIngreso;
 use DB;
 
@@ -29,28 +31,32 @@ class IngresoController extends Controller
     {
     		if ($request)
     		{
+
     			$query=trim($request->get('searchText'));
-    			$ingreso=DB::table('ingreso as i')
+          $ingresos = Ingreso::where('numero_comprobante','LIKE','%'.$query.'%')
+                      ->orderBy('idingreso')
+                      ->groupBy('idingreso','fecha_hora','fk_pg_tipo_comprobante','serie_comprobante','numero_comprobante','impuesto')
+                      ->paginate(7);
+    			/*$ingreso=DB::table('ingreso as i')
     			->join('persona as p','i.idproveedor','=','p.idpersona')
     			->join('detalle_ingreso as di','di.idingreso','=','i.idingreso')
     			->select('i.idingreso','i.fecha_hora','p.nombre','i.tipo_comprobante','i.serie_comprobante','i.numero_comprobante','i.impuesto','i.estado',DB::raw('sum(di.precio_compra*di.cantidad) as total'))
     			->where('i.numero_comprobante','LIKE','%'.$query.'%')
     			->orderBy('i.idingreso')
 				->groupBy('i.idingreso','i.fecha_hora','p.nombre','i.tipo_comprobante','i.serie_comprobante','i.numero_comprobante','i.impuesto','i.estado')
-				->paginate(7);
+				->paginate(7);*/
 
-				return view('compras.ingreso.index',["ingresos"=>$ingreso,"searchText"=>$query]);
+				return view('compras.ingreso.index',["ingresos"=>$ingresos,"searchText"=>$query]);
     		}
     }
 
     public function create()
     {
-    	$personas=DB::table('persona')->where('tipo_persona','=','Proveedor')->get();
-    	$articulos = DB::table('articulo as art')
-        ->select(DB::raw('CONCAT(art.codigo," ",art.nombre) as articulo'), 'art.idarticulo')
-        ->where('art.estado','=','Activo')
-        ->get();
-        return view('compras.ingreso.create',['personas'=>$personas,'articulos'=>$articulos]);
+      $proveedor = Proveedor::where('estado',true)->get();
+    	$articulos = Articulo::select(DB::raw('CONCAT(codigo," ",nombre) as articulo'), 'idarticulo')
+                            ->where('estado',true)
+                            ->get();
+        return view('compras.ingreso.create',['personas'=>$proveedor,'articulos'=>$articulos,"formaPago"=>PgCabecera::find(9)->pgDetalles,"tipoComprobante"=>PgCabecera::find(8)->pgDetalles]);
     }
 
     public function store(IngresoFormRequest $request){

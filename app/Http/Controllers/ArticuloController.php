@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use comercial\Http\Requests;
 use comercial\http\Requests\ArticuloFormRequest;
 use comercial\Articulo;
+use comercial\PgCabecera;
 use DB;
 
 class ArticuloController extends Controller
@@ -15,7 +16,6 @@ class ArticuloController extends Controller
     public function __construct(){
         $this->middleware('auth');
     }
-
     public function index(Request $request){
     		if ($request){
     			$query=trim($request->get('searchText'));
@@ -52,29 +52,22 @@ class ArticuloController extends Controller
 
 	public function create()
     {
-    	$categorias=DB::table('categoria')->where('condicion','=','1')->get();
-    	return view('almacen.articulo.create',["categorias"=>$categorias]);
-
+        return view('almacen.articulo.create',["categorias"=>PgCabecera::find(7)->pgDetalles,"tipoProductos"=>PgCabecera::find(6)->pgDetalles]);
     }
 
-    public function store(ArticuloFormRequest $request)
+    public function store(Request $request)
     {
     	$articulo=new Articulo;
-    	$articulo->idcategoria=$request->get('idcategoria');
-    	$articulo->codigo=$request->get('codigo');
     	$articulo->nombre=$request->get('nombre');
-    	$articulo->stock=$request->get('stock');
-        $articulo->stockmin=$request->get('stockmin');
+        $articulo->fk_pg_categoria=$request->get('idcategoria');
+    	$articulo->codigo=$request->get('codigo');
     	$articulo->descripcion=$request->get('descripcion');
-    	$articulo->estado='Activo';
-        $articulo->iva=$request->get('iva');
-
+        $articulo->fk_pg_tipo_producto=$request->get('idTipoProductos');
     	if (Input::exists('imagen')) {
     		$file=Input::file('imagen');
     		$file->move(public_path().'/imagenes/articulos/',$file->getClientOriginalName());
     		$articulo->imagen=$file->getClientOriginalName();
     	}
-
     	$articulo->save();
     	return Redirect::to('almacen/articulo');
     }
@@ -82,29 +75,26 @@ class ArticuloController extends Controller
     public function show($id)
     {
     	return view("almacen.articulo.show",["articulo"=>Articulo::findOrFail($id)]);
-       // return view("almacen.categoria.show",["categoria"=>Categoria::findOrFail($id)]);
-
     }
 
     public function edit($id)
     {
     	$articulo=Articulo::findOrFail($id);
-    	$categorias=DB::table('categoria')->where('condicion','=','1')->get();
-    	
-        return view("almacen.articulo.edit",["articulo"=>$articulo,"categorias"=>$categorias]);
+    	return view("almacen.articulo.edit",["categorias"=>PgCabecera::find(7)->pgDetalles,"tipoProductos"=>PgCabecera::find(6)->pgDetalles,"articulo"=>$articulo]);
     }
 
     public function update(ArticuloFormRequest $request,$id)
     {
     	$articulo=Articulo::findOrFail($id);
     	
-    	$articulo->idcategoria=$request->get('idcategoria');
+    	$articulo->fk_pg_categoria=$request->get('idcategoria');
+        $articulo->fk_pg_tipo_producto=$request->get('idTipoProductos');
     	$articulo->codigo=$request->get('codigo');
     	$articulo->nombre=$request->get('nombre');
     	$articulo->stock=$request->get('stock');
         $articulo->stockmin=$request->get('stockmin');
     	$articulo->descripcion=$request->get('descripcion');
-        $articulo->iva=$request->get('iva');
+        $articulo->iva=($request->get('iva')==null?false:true);
     	
     	if (Input::exists('imagen')) {
     		$file=Input::file('imagen');

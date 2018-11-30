@@ -1,10 +1,9 @@
 @extends ('layouts.admin',['title'=>"Empleados"])
 @section ('contenido')
-
 <div class="row">
-	<div class="col-lg-8 col-mg-8 col-sg-8 col-xs-12 ">
-		<h3>Listado de Empleados <a href="empleado/create"><button class="btn btn-success">Nuevo</button></a></h3>
+	<div class="col-lg-8 col-mg-8 col-sg-8 col-xs-12" style="display: -webkit-inline-box;">
 		@include('ventas.empleado.search')
+		<a style="margin-left: 100px;" href="empleado/create"><button class="btn btn-success">Nuevo</button></a>
 	</div>
 </div>
 <div class="row">

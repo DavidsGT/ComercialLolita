@@ -27,11 +27,27 @@
 		<div class="form-group">
 			<label>Categoria</label>
 			<select name="idcategoria" class="form-control">
+				<option value="" selected>Seleccione Categoria</option>
 				@foreach($categorias as $cat)
-				@if ($cat->idcategoria==$articulo->idcategoria)
-					<option value="{{$cat->idcategoria}}" selected>{{$cat->nombre}}</option>
+				@if ($articulo->fk_pg_categoria == $cat->id)
+					<option value="{{$cat->id}}" selected>{{$cat->descripcion}}</option>
 				@else
-					<option value="{{$cat->idcategoria}}">{{$cat->nombre}}</option>
+					<option value="{{$cat->id}}">{{$cat->descripcion}}</option>
+				@endif
+				@endforeach
+			</select>
+		</div>
+	</div>
+	<div class="col-lg-6 col-mg-6 col-sg-6 col-xs-12">
+		<div class="form-group">
+			<label>Tipo Producto</label>
+			<select name="idTipoProductos" class="form-control">
+				<option value="" selected>Seleccione Tipo Producto</option>
+				@foreach($tipoProductos as $prod)
+				@if ($articulo->fk_pg_categoria == $cat->id)
+				<option value="{{$prod->id}}" selected>{{$prod->descripcion}}</option>
+				@else
+					<option value="{{$prod->id}}">{{$prod->descripcion}}</option>
 				@endif
 				@endforeach
 			</select>
@@ -63,11 +79,12 @@
 	</div>
 	<div class="col-lg-6 col-mg-6 col-sg-6 col-xs-12">
 		<div class="form-group">
-			<label>Tipo Iva</label>
-			<select name="iva" class="form-control">
-				<option value="12">12</option>
-				<option value="0">0</option>
-			</select>
+			<label>Iva</label>
+			@if ($articulo->iva == true)
+				<input type="checkbox" name="iva" checked>
+			@else
+				<input type="checkbox" name="iva">
+			@endif
 		</div>
 	</div>
 	<div class="col-lg-6 col-mg-6 col-sg-6 col-xs-12">
@@ -76,7 +93,7 @@
 			<input type="file" name="imagen" class="form-control">	
 			@if($articulo->imagen!="")
 			<img src="{{asset('imagenes/articulos/'.$articulo->imagen)}}" height="80px" height="60px">
-			@endif	
+			@endif
 		</div>
 	</div>
 	<div class="col-lg-6 col-mg-6 col-sg-6 col-xs-12">

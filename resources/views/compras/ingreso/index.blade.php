@@ -19,7 +19,7 @@
 				<th>Comprobante</th>
 			    <th>Impuesto</th>
 			    <th>Total Ingreso</th>
-			    <th>Estado</th>
+			    <!-- <th>Estado</th> -->
 			    <th style="text-align: center; " >Opciones</th>
 			</thead>
 
@@ -27,11 +27,11 @@
 			<tr>
 				<td>{{ $ing->idingreso}}</td>
 				<td>{{ $ing->fecha_hora}}</td>
-				<td>{{ $ing->nombre}}</td>
-				<td>{{ $ing->tipo_comprobante.': '.$ing->serie_comprobante.'-'.$ing->numero_comprobante}}</td>
+				<td>{{ $ing->proveedorEncargado}}</td>
+				<td>{{ comercial\PgDetalle::find($ing->fk_pg_tipo_comprobante)->descripcion.': '.$ing->serie_comprobante.'-'.$ing->numero_comprobante}}</td>
 				<td>{{ $ing->impuesto}}</td>
 				<td>{{ $ing->total}}</td>
-				<td>{{ $ing->estado}}</td>
+				<!-- <td>{{ $ing->estado}}</td> -->
 				<td>
 				<a href="{{URL::action('IngresoController@show',$ing->idingreso)}} "><button class="btn btn-primary">Procesar</button></a>
 				<a href="" data-target="#modal-delete-{{$ing->idingreso}}" data-toggle="modal"><button class="btn btn-danger">Anular</button></a>
