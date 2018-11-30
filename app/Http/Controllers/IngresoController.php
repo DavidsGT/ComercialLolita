@@ -31,7 +31,7 @@ class IngresoController extends Controller
     {
     		if ($request)
     		{
-
+          echo "Buenas tardes";
     			$query=trim($request->get('searchText'));
           $ingresos = Ingreso::where('numero_comprobante','LIKE','%'.$query.'%')
                       ->orderBy('idingreso')
